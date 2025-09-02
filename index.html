@@ -3,449 +3,292 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Which Wine Grape Are You? 🍇</title>
-  <meta name="description" content="8‑question wine personality quiz — discover your grape with structured WSET‑style results and pairings."/>
-  <meta property="og:title" content="Which Wine Grape Are You?"/>
-  <meta property="og:description" content="Take the 8‑question quiz and get your grape result with WSET‑style notes and pairings."/>
-  <meta property="og:type" content="website"/>
-  <meta name="theme-color" content="#8b5cf6"/>
+  <title>Which Wine Grape Are You? 🍇 — v3</title>
+  <meta name="description" content="An 8‑question personality quiz that secretly maps to classic wine grapes. Playful stories + WSET-style facts."/>
   <style>
-    :root{--bg:#0f0f12;--card:#17171c;--ink:#f4f4f6;--muted:#a9a9b3;--accent:#8b5cf6;--accent-2:#f59e0b;--ok:#22c55e}
+    :root{
+      --bg:#0b0b10; --card:#13131a; --ink:#e8e8f0; --muted:#a7a7bf; --accent:#8ef0a6; --accent-2:#9ecbff; --rose:#ff9ec0; --gold:#ffd782;
+      --radius:18px;
+    }
     *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";background:radial-gradient(1200px 800px at 20% 0%,#1a1a22,#0c0c0f 60%),url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><circle cx="8" cy="8" r="1" fill="%23272733"/></svg>');color:var(--ink);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-    .wrap{max-width:980px;margin:0 auto;padding:24px}
-    header{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:space-between;margin-bottom:18px}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),#e879f9);box-shadow:0 10px 30px rgba(139,92,246,.35)}
-    h1{margin:0;font-size:clamp(22px,3.6vw,36px)}
-    .muted{color:var(--muted)}
-    .card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);box-shadow:0 12px 40px rgba(0,0,0,.45);border-radius:18px;padding:22px;margin:14px 0}
-    .pill{display:inline-flex;gap:8px;align-items:center;padding:6px 12px;border-radius:999px;background:rgba(139,92,246,.12);color:#d6b9ff;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.8px}
-    .grid{display:grid;gap:16px}
-    @media (min-width:800px){.grid{grid-template-columns:1.05fr .95fr}}
-    .q{margin:8px 0 6px;font-weight:700}
-    .options{display:grid;gap:10px;margin:10px 0 6px}
-    .opt{position:relative;display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;cursor:pointer;background:#141418;border:1px solid rgba(255,255,255,.08)}
-    .opt:hover{border-color:rgba(255,255,255,.18);background:#16161c}
-    .opt input{appearance:none;width:18px;height:18px;border-radius:50%;border:2px solid #aaa;display:grid;place-items:center}
-    .opt input:checked{border-color:var(--accent)}
-    .dot{width:8px;height:8px;border-radius:50%;background:transparent}
-    .opt input:checked + .dot{background:var(--accent)}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px}
-    button{appearance:none;border:0;background:linear-gradient(135deg,var(--accent),#e879f9);color:white;padding:12px 16px;border-radius:14px;cursor:pointer;font-weight:800;letter-spacing:.3px;box-shadow:0 10px 30px rgba(139,92,246,.35)}
-    button.secondary{background:#23232a;color:#e9e9ee;box-shadow:none;border:1px solid rgba(255,255,255,.08)}
-    .toast{font-size:13px}
-    .result{display:none}
-    .result.show{display:block}
-    .result .title{font-size:28px;font-weight:900;margin:0 0 6px}
-    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:#15151a}
-    .pair{margin-top:10px;padding:12px;border-radius:14px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25)}
-    footer{margin:28px 0 10px;text-align:center;color:var(--muted);font-size:12px}
-    .progress{height:6px;background:#1c1c23;border-radius:8px;overflow:hidden;margin:6px 0 14px;border:1px solid rgba(255,255,255,.06)}
-    .bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .4s ease}
-    .note{font-size:12px;color:var(--muted)}
-    .kgrid{display:grid;gap:10px}
-    @media(min-width:700px){.kgrid{grid-template-columns:1fr 1fr}}
-    .kv{background:#121217;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px}
-    .kv h4{margin:0 0 6px;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:#c9c9d3}
-    ul{margin:6px 0 0 16px}
-    li{margin:2px 0}
-    .sharegrid{display:grid;gap:12px}
-    @media(min-width:700px){.sharegrid{grid-template-columns:1fr auto}}
-    .input{display:flex;gap:8px;align-items:center}
-    input.url{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:#111118;color:#eaeaf0}
-    .qr{width:180px;height:180px;border-radius:12px;background:#111118;border:1px solid rgba(255,255,255,.08);display:grid;place-items:center}
-    .small{font-size:12px;color:var(--muted)}
+    body{margin:0;background:radial-gradient(1200px 800px at 10% -10%, #1a1a24 0,#0b0b10 50%);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;}
+    .wrap{max-width:980px;margin:40px auto;padding:20px}
+    header{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:18px}
+    h1{font-size:clamp(24px,3.5vw,40px);margin:0;letter-spacing:0.2px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(6px);border-radius:var(--radius);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    .intro{padding:22px}
+    p.lede{color:var(--muted);margin:8px 0 0}
+    .progress{height:8px;background:#222330;border-radius:99px;overflow:hidden;margin:18px 0}
+    .bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .35s ease}
+    .q{padding:20px}
+    .q h2{margin:0 0 12px;font-size:20px}
+    .choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+    button.choice{border:1px solid rgba(255,255,255,.12);background:#14141d;color:var(--ink);padding:14px 14px;border-radius:12px;text-align:left;cursor:pointer;transition:transform .08s ease, border-color .2s ease, background .2s ease}
+    button.choice:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.28)}
+    button.choice[aria-pressed="true"]{outline:2px solid var(--accent-2);background:#161827}
+    .controls{display:flex;gap:10px;justify-content:flex-end;padding:16px;border-top:1px solid rgba(255,255,255,.08)}
+    .btn{border:1px solid rgba(255,255,255,.14);background:#181a28;color:var(--ink);padding:10px 14px;border-radius:10px;cursor:pointer}
+    .btn.primary{background:linear-gradient(90deg,var(--accent-2),var(--rose));color:#111;font-weight:700;border:none}
+    .btn[disabled]{opacity:.45;cursor:not-allowed}
+    .result{display:none;margin-top:22px}
+    .result.active{display:block}
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+    .story{background:#12131b;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;line-height:1.6}
+    .story h3{margin:0 0 6px;font-size:22px}
+    .tag{display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(158,203,255,.15);border:1px solid rgba(158,203,255,.35);color:#cfe3ff;font-size:12px;margin-top:6px}
+    .facts{display:grid;gap:10px}
+    .fact{background:#12131b;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px}
+    .fact h4{margin:0 0 6px;font-size:14px;color:#bcd3ff}
+    .fact p{margin:0;color:var(--muted)}
+    .footer{margin-top:16px;color:var(--muted);font-size:12px}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <div class="brand">
-        <div class="logo" aria-hidden="true">🍷</div>
-        <div>
-          <h1>Which Wine Grape Are You?</h1>
-          <div class="muted">8 quick questions • clean 4‑option layout • instant result</div>
-        </div>
-      </div>
-      <div class="pill">Free • Mobile‑friendly</div>
+      <h1>Which Wine Grape Are You? 🍇</h1>
+      <button class="btn" id="resetBtn" aria-label="Reset quiz">Reset</button>
     </header>
 
-    <div class="grid">
-      <section class="card">
-        <div class="progress" aria-hidden="true"><div class="bar" id="progressBar"></div></div>
-        <form id="quiz" novalidate></form>
-        <div class="actions">
-          <button id="submitBtn" type="button">Reveal my grape</button>
-          <button id="resetBtn" type="button" class="secondary">Reset</button>
-          <span class="toast muted" id="toast"></span>
-        </div>
-        <p class="note">No sign‑ups, no tracking — just vibes and viniferous curiosity.</p>
-      </section>
-
-      <aside class="card result" id="resultCard" aria-live="polite">
-        <div class="badge">🍇 Your result</div>
-        <h2 class="title" id="resTitle">&nbsp;</h2>
-        <p id="resBlurb" class="muted" style="margin-top:-2px"></p>
-        <div class="kgrid" style="margin-top:8px">
-          <div class="kv"><h4>Style</h4><div id="resStyle"></div></div>
-          <div class="kv"><h4>Structure</h4><div id="resStruct"></div></div>
-          <div class="kv"><h4>Aromas</h4><ul id="resAromas"></ul></div>
-          <div class="kv"><h4>Classic regions</h4><ul id="resRegions"></ul></div>
-          <div class="kv"><h4>Learn</h4><ul id="resLearn"></ul></div>
-          <div class="kv"><h4>Serve</h4><div id="resServe"></div></div>
-          <div class="kv"><h4>Food pairings</h4><div id="resPair"></div></div>
-        </div>
-        <div class="actions" style="margin-top:10px">
-          <button id="retakeBtn" type="button" class="secondary">Retake</button>
-        </div>
-      </aside>
+    <div class="card intro">
+      <p><strong>Eight questions.</strong> Zero snobbery. This is a personality quiz in disguise — your vibes secretly map to classic grapes.</p>
+      <div class="progress" aria-label="Progress"><div class="bar" id="bar"></div></div>
+      <div id="quiz"></div>
+      <div class="controls">
+        <button class="btn" id="prev" disabled>Back</button>
+        <button class="btn primary" id="next">Next</button>
+      </div>
     </div>
 
-    <section class="card">
-      <div class="badge">🔗 Share this quiz</div>
-      <div class="sharegrid">
-        <div>
-          <div class="input">
-            <input id="shareUrl" class="url" readonly aria-label="Shareable quiz link"/>
-            <button id="copyBtn" type="button" class="secondary">Copy link</button>
-            <button id="nativeShare" type="button">Share</button>
-          </div>
-          <div id="copyToast" class="small" style="margin-top:6px"></div>
-        </div>
-        <div class="qr" aria-label="QR code for this quiz"><img id="qrImg" alt="QR to this quiz" width="180" height="180"/></div>
-      </div>
-    </section>
+    <section class="result" id="result"></section>
 
-    <footer>Built for training sessions — project the QR and let everyone play. Cheers! 🍷</footer>
+    <p class="footer">Facts lean on WSET-style traits (body, acidity, tannin, alcohol, climate, aromas, style, pairings). Stories are playful metaphors, not tasting notes. Learn, laugh, then drink water. 🫡</p>
   </div>
 
   <script>
-    // --- Config: Results (WSET‑style, fun emojis) ---
-    const GRAPES = {
-      chardonnay: {
-        name: "Chardonnay", emoji: "🥂",
-        blurb: "Personality: shapeshifter chic — elegant under pressure, comfy when it counts. You’re the friend who can do black‑tie or beach day without breaking a sweat.",
-        style: "Dry (unoaked to richly oaked)",
-        structure: { acidity: "Medium to Medium+", tannin: "—", body: "Medium to Full", alcohol: "Medium to High", sweetness: "Dry" },
-        aromas: ["green apple", "lemon", "peach", "butter/vanilla (oak/MLF)", "hazelnut"],
-        regions: ["Burgundy (Chablis, Côte de Beaune)", "California (Sonoma/Napa)", "Australia (Margaret River)", "South Africa"],
-        serve: "10–13°C • white wine glass",
-        pairings: "Roast chicken, buttery seafood, creamy pasta",
-        learn: [
-          "Malolactic conversion (MLF) softens acidity and adds buttery notes.",
-          "Oak adds vanilla/toast; stainless steel preserves crisp apple‑citrus."
-        ]
-      },
-      sauvblanc: {
-        name: "Sauvignon Blanc", emoji: "🪁",
-        blurb: "Personality: zesty trailblazer — bright ideas, fast feet, and picnic‑energy. You refresh the room the way citrus refreshes a palate.",
-        style: "Dry (rarely oaked)",
-        structure: { acidity: "High", tannin: "—", body: "Light to Medium", alcohol: "Medium", sweetness: "Dry" },
-        aromas: ["lime/gooseberry", "green bell pepper", "passion fruit", "nettles", "wet stone"],
-        regions: ["Loire (Sancerre/Pouilly‑Fumé)", "New Zealand (Marlborough)", "Chile (Casablanca)", "South Africa"],
-        serve: "8–10°C • white wine glass",
-        pairings: "Goat cheese, salads, herb‑led seafood",
-        learn: [
-          "Pyrazines drive the green capsicum note; thiols bring passionfruit/tropical.",
-          "Cool climates sharpen acidity; warmer sites tilt toward tropical fruit."
-        ]
-      },
-      pinotgrigio: {
-        name: "Pinot Grigio", emoji: "🌤️",
-        blurb: "Personality: sunny and unfussy — you keep plans light and the vibe friendly. Hydration, but make it stylish.",
-        style: "Dry (light‑bodied)",
-        structure: { acidity: "Medium to Medium+", tannin: "—", body: "Light", alcohol: "Medium", sweetness: "Dry" },
-        aromas: ["lemon", "pear", "white flowers", "almond"],
-        regions: ["Italy (Veneto, Friuli, Alto Adige)", "USA (Oregon)", "Germany/Alsace (as Grauburgunder/Pinot Gris)"],
-        serve: "8–10°C • white wine glass",
-        pairings: "Light salads, antipasti, margarita pizza",
-        learn: [
-          "‘Pinot Gris’ in Alsace is often fuller and spicier than Italian styles.",
-          "‘Ramato’ is a skin‑contact style that gives a copper tint."
-        ]
-      },
-      riesling: {
-        name: "Riesling", emoji: "🎶",
-        blurb: "Personality: precision with personality — you hit high notes without losing the melody. Playful, but exacting.",
-        style: "Dry to Medium‑sweet (varies by region)",
-        structure: { acidity: "High", tannin: "—", body: "Light", alcohol: "Low to Medium", sweetness: "Dry to Medium‑sweet" },
-        aromas: ["lime", "green apple", "white peach", "jasmine", "petrol (with age)"],
-        regions: ["Germany (Mosel, Rheingau)", "Alsace", "Australia (Clare/Eden)", "Austria"],
-        serve: "7–10°C • white wine glass",
-        pairings: "Spicy Asian dishes, pork, fragrant curries",
-        learn: [
-          "High acidity balances residual sugar — sweet doesn’t mean cloying.",
-          "TDN compound can give that ‘petrol’ note with bottle age."
-        ]
-      },
-      cabernet: {
-        name: "Cabernet Sauvignon", emoji: "🦁",
-        blurb: "Personality: the executive — decisive, structured, and a touch dramatic. When you enter, the tannins stand up straight.",
-        style: "Dry (often oaked)",
-        structure: { acidity: "Medium+", tannin: "High", body: "Full", alcohol: "Medium to High", sweetness: "Dry" },
-        aromas: ["blackcurrant", "black cherry", "cedar", "tobacco", "graphite"],
-        regions: ["Bordeaux (Left Bank)", "Napa Valley", "Coonawarra", "Chile (Maipo)"] ,
-        serve: "16–18°C • large red glass",
-        pairings: "Steak, lamb, aged hard cheeses",
-        learn: [
-          "Thick skins → deep color and high tannin; oak adds cedar/spice.",
-          "Often blended with Merlot/Cab Franc in Bordeaux for balance."
-        ]
-      },
-      merlot: {
-        name: "Merlot", emoji: "🫶",
-        blurb: "Personality: velvet mode — you’re the soft landing and the reliable hug, with enough depth to keep it interesting.",
-        style: "Dry (often oaked)",
-        structure: { acidity: "Medium", tannin: "Medium", body: "Medium to Full", alcohol: "Medium", sweetness: "Dry" },
-        aromas: ["plum", "redcurrant", "chocolate", "baking spice"],
-        regions: ["Bordeaux (Right Bank)", "USA (Washington/California)", "Chile"],
-        serve: "15–18°C • red glass",
-        pairings: "Burgers, meatballs, tomato‑based pasta",
-        learn: [
-          "Earlier‑ripening than Cabernet; tends toward softer tannins.",
-          "Oak aging can layer mocha/chocolate notes onto plum fruit."
-        ]
-      },
-      pinotnoir: {
-        name: "Pinot Noir", emoji: "🦊",
-        blurb: "Personality: silk and nuance — observant, expressive, a little mysterious. You prefer conversation to shouting.",
-        style: "Dry (light to medium body)",
-        structure: { acidity: "Medium+", tannin: "Low to Medium", body: "Light to Medium", alcohol: "Medium", sweetness: "Dry" },
-        aromas: ["strawberry", "cherry", "cranberry", "mushroom", "forest floor"],
-        regions: ["Burgundy", "Oregon", "New Zealand (Central Otago)", "Tasmania"],
-        serve: "14–16°C • Burgundy glass (light chill)",
-        pairings: "Duck, mushrooms, salmon, roast chicken",
-        learn: [
-          "Thin‑skinned → paler color, gentle tannins, very site‑expressive.",
-          "Cooler sites favor red fruit/earth; warmer sites push riper cherry."
-        ]
-      },
-      syrah: {
-        name: "Syrah / Shiraz", emoji: "🔥",
-        blurb: "Personality: pepper and power — you bring the bassline and the pyrotechnics. Crowd‑pleaser with edge.",
-        style: "Dry (often oaked)",
-        structure: { acidity: "Medium to Medium+", tannin: "Medium+ to High", body: "Full", alcohol: "Medium to High", sweetness: "Dry" },
-        aromas: ["blackberry", "blueberry", "black pepper", "olive", "smoke/meat"],
-        regions: ["Northern Rhône (Hermitage, Côte‑Rôtie)", "Barossa/McLaren Vale", "Washington"],
-        serve: "16–18°C • large red glass",
-        pairings: "BBQ, grilled meats, cocoa‑rubbed dishes",
-        learn: [
-          "Rotundone compound gives black pepper — pronounced in cooler sites.",
-          "Warmer climates push riper, jammy fruit and higher alcohol."
-        ]
-      }
-    };
+  // --------------------------- Data -----------------------------------------
+  const grapes = {
+    "Sauvignon Blanc": {
+      emoji: "🪁",
+      color: "white",
+      personality: "Zesty truth-teller with sunrise-jog energy.",
+      story: "You arrive like a sea breeze through a stuffy room — windows fly open, curtains take flight, and everyone suddenly sits up straighter. Your calendar has color-coded blocks for curiosity. You’re allergic to waffle; your love language is clarity. Friends call when they need a compass (or a sharp lime squeeze over a messy situation).",
+      facts: { body:"light", acidity:"high", tannin:"n/a", alcohol:"medium", climate:"cool to moderate (Loire, Marlborough)", aromas:"gooseberry, lime, green pepper, passionfruit", style:"unoaked, racy, linear", pairings:"goat cheese, oysters, green herbs" }
+    },
+    "Chardonnay": {
+      emoji: "🧈",
+      color: "white",
+      personality: "Adaptable lead character; from crisp couture to buttered velvet.",
+      story: "You read the room like a maestro. If it’s a gallery opening, you’re sleek and mineral; if it’s a fireside dinner, you’re generous and toasty. Reinvention isn’t a mask for you — it’s a craft. People underestimate how intentional you are; versatility is your superpower, not a compromise.",
+      facts: { body:"medium to full", acidity:"medium to high", tannin:"n/a", alcohol:"medium to high", climate:"cool to warm (Chablis → Napa)", aromas:"green apple, lemon → pineapple; toast & vanilla with oak", style:"from steely to creamy", pairings:"roast chicken, lobster, creamy sauces" }
+    },
+    "Riesling": {
+      emoji: "🎐",
+      color: "white",
+      personality: "Precision poet with a secret time machine.",
+      story: "At first, people clock the sparkle; later, they realize you remember every star’s name. You file details like a jeweler — exacting, playful, and patient. You’re proof that intensity can be joyful. Decades later, your old notes still hum with electricity.",
+      facts: { body:"light", acidity:"high", tannin:"n/a", alcohol:"low to medium", climate:"cool (Mosel; Clare/Eden for dry styles)", aromas:"lime, green apple, jasmine; petrol with age", style:"dry to lusciously sweet; always high-def", pairings:"spicy dishes, ceviche, pork" }
+    },
+    "Pinot Grigio": {
+      emoji: "🧊",
+      color: "white",
+      personality: "Effortless minimalist with cliffside-breeze calm.",
+      story: "Your desk is tidy, your playlists are clean lines and gentle clicks. You choose the small, intentional thing over the loud, complicated plan. People relax around you the way water settles in a smooth glass.",
+      facts: { body:"light", acidity:"medium to high", tannin:"n/a", alcohol:"medium", climate:"cool to moderate (Alto Adige, Friuli)", aromas:"pear, lemon, almond", style:"dry, crisp, stainless steel", pairings:"antipasti, sushi, light pastas" }
+    },
+    "Pinot Noir": {
+      emoji: "🫶",
+      color: "red",
+      personality: "Elegant introvert; soft voice, deep library.",
+      story: "You don’t shout; you shimmer. People who slow down near you discover crushed velvet, forest paths after rain, and a sly sense of humor. You collect moments, not trophies, and you know which memories deserve a second glass of attention.",
+      facts: { body:"light", acidity:"medium to high", tannin:"low", alcohol:"medium", climate:"cool to moderate (Burgundy, Oregon)", aromas:"strawberry, cherry, rose, forest floor", style:"silky, often lightly oaked", pairings:"duck, mushrooms, salmon" }
+    },
+    "Merlot": {
+      emoji: "🧣",
+      color: "red",
+      personality: "Soft‑power diplomat with couch‑level coziness.",
+      story: "You’re the friend who brings blankets and boundaries. Arguments lower their shoulders around you. Your gift is generosity without noise — a steady hand on the kettle, a seat that appears when someone didn’t know they needed one.",
+      facts: { body:"medium to full", acidity:"medium", tannin:"medium", alcohol:"medium to high", climate:"moderate to warm (Right Bank, Napa)", aromas:"plum, black cherry, chocolate", style:"round, supple, often oaked", pairings:"roast meats, tomato pastas" }
+    },
+    "Cabernet Sauvignon": {
+      emoji: "🛡️",
+      color: "red",
+      personality: "Armored romantic; strategy by day, loyalty by night.",
+      story: "People meet the structure first — the outlines, the plans, the spine. Then they notice the soft center that guards its warmth. You like promises kept, stories with chapters, and friendships that can carry weight.",
+      facts: { body:"full", acidity:"medium", tannin:"high", alcohol:"high", climate:"moderate to warm (Left Bank, Napa)", aromas:"blackcurrant, cedar, mint, tobacco", style:"structured, age‑worthy, oak‑friendly", pairings:"steak, lamb, firm cheeses" }
+    },
+    "Syrah/Shiraz": {
+      emoji: "⚡",
+      color: "red",
+      personality: "Storm-chaser poet with a smoky laugh.",
+      story: "You roll in like weather — electric and dramatic, but never reckless. There’s pepper in your jokes and midnight in your playlist. You give people a safe place to be intense.",
+      facts: { body:"full", acidity:"medium", tannin:"medium to high", alcohol:"high", climate:"moderate to warm (Rhône; Barossa)", aromas:"blackberry, violet, black pepper; smoke/meat", style:"bold, savory to plush", pairings:"grilled meats, bbq, hearty stews" }
+    }
+  };
 
-    // --- Questions (8) — clean 4‑option layout ---
-    // Each option gives one point to a grape key in GRAPES
-    const QUESTIONS = [
-      {
-        q: "It’s Friday night — what’s your plan?",
-        options: [
-          { t: "Elegant dinner party", g: "chardonnay" },
-          { t: "Late‑night dancing", g: "syrah" },
-          { t: "Cozy comfort‑food night", g: "merlot" },
-          { t: "Art‑house cinema", g: "pinotnoir" }
-        ]
-      },
-      {
-        q: "Pick a vacation vibe.",
-        options: [
-          { t: "Burgundy châteaux", g: "chardonnay" },
-          { t: "Marlborough coast", g: "sauvblanc" },
-          { t: "Amalfi scooters & sun", g: "pinotgrigio" },
-          { t: "Mosel river villages", g: "riesling" }
-        ]
-      },
-      {
-        q: "Choose a snack.",
-        options: [
-          { t: "Goat cheese salad", g: "sauvblanc" },
-          { t: "Crisps & olives", g: "pinotgrigio" },
-          { t: "Fruit gummies", g: "riesling" },
-          { t: "Steak bites", g: "cabernet" }
-        ]
-      },
-      {
-        q: "Which word fits you best?",
-        options: [
-          { t: "Versatile", g: "chardonnay" },
-          { t: "Energetic", g: "sauvblanc" },
-          { t: "Warm", g: "merlot" },
-          { t: "Bold", g: "syrah" }
-        ]
-      },
-      {
-        q: "Pick a color vibe.",
-        options: [
-          { t: "Deep red", g: "cabernet" },
-          { t: "Plum", g: "merlot" },
-          { t: "Ruby", g: "pinotnoir" },
-          { t: "Sky blue", g: "riesling" }
-        ]
-      },
-      {
-        q: "Friends call you…",
-        options: [
-          { t: "The stylish one", g: "chardonnay" },
-          { t: "The zesty one", g: "sauvblanc" },
-          { t: "The chill one", g: "pinotgrigio" },
-          { t: "The daring one", g: "syrah" }
-        ]
-      },
-      {
-        q: "Pick a texture you’re craving.",
-        options: [
-          { t: "Crisp & zesty", g: "sauvblanc" },
-          { t: "Silky & subtle", g: "pinotnoir" },
-          { t: "Plush & cozy", g: "merlot" },
-          { t: "Bold & spicy", g: "syrah" }
-        ]
-      },
-      {
-        q: "When wine’s not available, you order…",
-        options: [
-          { t: "Old fashioned", g: "cabernet" },
-          { t: "Aperol spritz", g: "pinotgrigio" },
-          { t: "Negroni", g: "pinotnoir" },
-          { t: "Spicy margarita", g: "syrah" }
-        ]
-      }
-    ];
+  // 8 playful, not-obviously-wine questions
+  const questions = [
+    {
+      id:1,
+      q:"Your weekend energy?",
+      choices:[
+        {t:"Sunrise hike, cold lake dip 🏞️", m:{"Sauvignon Blanc":2, "Riesling":1}},
+        {t:"Gallery crawl then slow dinner 🖼️", m:{"Pinot Noir":2, "Chardonnay":1}},
+        {t:"Friends over, homemade comfort 🍲", m:{"Merlot":2, "Chardonnay":1}},
+        {t:"Road trip playlist and detours 🚗", m:{"Syrah/Shiraz":2, "Cabernet Sauvignon":1}}
+      ]
+    },
+    {
+      id:2,
+      q:"Pick a room aesthetic:",
+      choices:[
+        {t:"Sunlit, plants, linen, fresh air 🌿", m:{"Sauvignon Blanc":2, "Pinot Grigio":1}},
+        {t:"Minimal, cool tones, tidy lines 📐", m:{"Pinot Grigio":2, "Riesling":1}},
+        {t:"Warm wood, bookshelf maze 📚", m:{"Pinot Noir":2, "Merlot":1}},
+        {t:"Dark jewel tones, big art 🖤", m:{"Syrah/Shiraz":2, "Cabernet Sauvignon":1}}
+      ]
+    },
+    {
+      id:3,
+      q:"Conflict style:",
+      choices:[
+        {t:"Clarify the facts and move 🌬️", m:{"Riesling":2, "Sauvignon Blanc":1}},
+        {t:"Hear everyone, find the soft landing 🧣", m:{"Merlot":2}},
+        {t:"Take the long view, make a plan 🛡️", m:{"Cabernet Sauvignon":2}},
+        {t:"Crack a joke, defuse the room ⚡", m:{"Syrah/Shiraz":2}}
+      ]
+    },
+    {
+      id:4,
+      q:"Travel fantasy:",
+      choices:[
+        {t:"Cliff paths + salty breeze 🌊", m:{"Sauvignon Blanc":2, "Pinot Grigio":1}},
+        {t:"Old town alleyways + bistro nights 🕯️", m:{"Pinot Noir":2, "Chardonnay":1}},
+        {t:"Mountain lakes + crisp mornings 🏔️", m:{"Riesling":2}},
+        {t:"Desert stargazing + campfire stories 🔭", m:{"Syrah/Shiraz":2, "Cabernet Sauvignon":1}}
+      ]
+    },
+    {
+      id:5,
+      q:"Midnight snack spirit animal:",
+      choices:[
+        {t:"Citrus + crunchy greens 🥗", m:{"Sauvignon Blanc":2}},
+        {t:"Buttered toast with something fancy 🥖", m:{"Chardonnay":2}},
+        {t:"Ramen with a careful swirl 🍜", m:{"Riesling":2}},
+        {t:"Leftover stew that somehow got better 🍛", m:{"Merlot":2}}
+      ]
+    },
+    {
+      id:6,
+      q:"Party role:",
+      choices:[
+        {t:"Set the vibe, playlist on point 🎧", m:{"Pinot Grigio":2}},
+        {t:"Deep corner chats that change lives 🗝️", m:{"Pinot Noir":2}},
+        {t:"Host with cozy lighting + snacks 🕯️", m:{"Merlot":2, "Chardonnay":1}},
+        {t:"Storyteller with dramatic arcs 🎭", m:{"Syrah/Shiraz":2, "Cabernet Sauvignon":1}}
+      ]
+    },
+    {
+      id:7,
+      q:"Texting style:",
+      choices:[
+        {t:"Direct, bullet points ✅", m:{"Sauvignon Blanc":2, "Riesling":1}},
+        {t:"Aesthetic pics + few words 📸", m:{"Pinot Grigio":2}},
+        {t:"Paragraphs with feelings 🫶", m:{"Pinot Noir":2}},
+        {t:"Short but decisive 🧱", m:{"Cabernet Sauvignon":2}}
+      ]
+    },
+    {
+      id:8,
+      q:"Choose a talisman:",
+      choices:[
+        {t:"Compass ⎈", m:{"Sauvignon Blanc":1, "Riesling":1}},
+        {t:"Fountain pen ✒️", m:{"Pinot Noir":1, "Chardonnay":1}},
+        {t:"Wool scarf 🧣", m:{"Merlot":1}},
+        {t:"Meteor fragment ☄️", m:{"Syrah/Shiraz":1, "Cabernet Sauvignon":1}}
+      ]
+    }
+  ];
 
-    // --- Render quiz ---
-    const form = document.getElementById('quiz');
-    const progressBar = document.getElementById('progressBar');
-    const toast = document.getElementById('toast');
+  // --------------------------- Quiz Engine ----------------------------------
+  const state = { i:0, answers:{}, scores:{} };
+  const quizEl = document.getElementById('quiz');
+  const barEl = document.getElementById('bar');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const resultEl = document.getElementById('result');
+  const resetBtn = document.getElementById('resetBtn');
 
-    function render(){
-      form.innerHTML = '';
-      QUESTIONS.forEach((q, i) => {
-        const block = document.createElement('div');
-        block.className = 'qblock';
-        const qEl = document.createElement('div');
-        qEl.className = 'q';
-        qEl.textContent = (i+1) + '. ' + q.q;
-        block.appendChild(qEl);
-        const opts = document.createElement('div');
-        opts.className = 'options';
-        q.options.forEach((opt, j) => {
-          const id = `q${i}_opt${j}`;
-          const label = document.createElement('label');
-          label.className = 'opt';
-          label.setAttribute('for', id);
-          label.innerHTML = `
-            <input type="radio" name="q${i}" id="${id}" value="${opt.g}">
-            <span class="dot" aria-hidden="true"></span>
-            <span>${opt.t}</span>
-          `;
-          opts.appendChild(label);
-        });
-        block.appendChild(opts);
-        form.appendChild(block);
+  function render(){
+    const total = questions.length;
+    barEl.style.width = `${(state.i/total)*100}%`;
+    if(state.i < total){
+      const {q, choices, id} = questions[state.i];
+      quizEl.innerHTML = `
+        <div class="q">
+          <h2>${state.i+1}. ${q}</h2>
+          <div class="choices">
+            ${choices.map((c,idx)=>`<button class="choice" data-idx="${idx}" aria-pressed="${state.answers[id]===idx}">${c.t}</button>`).join('')}
+          </div>
+        </div>
+      `;
+      prevBtn.disabled = state.i===0;
+      nextBtn.textContent = state.i===total-1? 'See my grape ➡️' : 'Next';
+      nextBtn.disabled = state.answers[id]===undefined;
+      quizEl.querySelectorAll('button.choice').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          state.answers[id]= +btn.dataset.idx;
+          quizEl.querySelectorAll('button.choice').forEach(b=>b.setAttribute('aria-pressed','false'));
+          btn.setAttribute('aria-pressed','true');
+          nextBtn.disabled=false;
+        })
+      })
+    } else {
+      // compute result
+      state.scores = {};
+      questions.forEach(({id,choices})=>{
+        const pick = choices[state.answers[id]];
+        Object.entries(pick.m).forEach(([g,v])=>{
+          state.scores[g]=(state.scores[g]||0)+v;
+        })
       });
+      const best = Object.keys(state.scores).sort((a,b)=>state.scores[b]-state.scores[a])[0];
+      const g = grapes[best];
+      barEl.style.width = '100%';
+      const fact = (k,label)=> g.facts[k]?`<div class="fact"><h4>${label}</h4><p>${g.facts[k]}</p></div>`:'';
+      resultEl.innerHTML = `
+        <div class="card" style="padding:20px">
+          <div class="grid">
+            <div class="story">
+              <h3>${g.emoji} You are <span style="color:${g.color==='red'?'#ff9ec0':'#9ecbff'}">${best}</span></h3>
+              <span class="tag">${g.personality}</span>
+              <p style="margin-top:10px">${g.story}</p>
+            </div>
+            <div class="facts">
+              ${fact('body','Body')}
+              ${fact('acidity','Acidity')}
+              ${fact('tannin','Tannin')}
+              ${fact('alcohol','Alcohol')}
+              ${fact('climate','Typical climate')}
+              ${fact('aromas','Typical aromas')}
+              ${fact('style','Common style')}
+              ${fact('pairings','Food pairings')}
+            </div>
+          </div>
+        </div>
+      `;
+      resultEl.classList.add('active');
+      quizEl.innerHTML = '';
+      nextBtn.disabled=true; prevBtn.disabled=true;
     }
-    render();
+  }
 
-    function updateProgress(){
-      const total = QUESTIONS.length;
-      const answered = [...form.querySelectorAll('input[type="radio"]:checked')]
-        .reduce((acc, r) => acc.add(r.name), new Set()).size;
-      const pct = Math.round((answered/total)*100);
-      progressBar.style.width = pct + '%';
-    }
-    form.addEventListener('change', updateProgress);
+  prevBtn.addEventListener('click',()=>{ if(state.i>0){ state.i--; render(); }});
+  nextBtn.addEventListener('click',()=>{ if(state.answers[questions[state.i].id]!==undefined){ state.i++; render(); }});
+  resetBtn.addEventListener('click',()=>{ state.i=0; state.answers={}; state.scores={}; resultEl.classList.remove('active'); resultEl.innerHTML=''; render(); });
 
-    // --- Scoring ---
-    function scoreQuiz(){
-      const chosen = [...form.querySelectorAll('input[type="radio"]:checked')].map(r => r.value);
-      if(chosen.length !== QUESTIONS.length){
-        throw new Error(`Please answer all ${QUESTIONS.length} questions.`);
-      }
-      const tally = {};
-      chosen.forEach(g => tally[g] = (tally[g]||0) + 1);
-      const entries = Object.entries(tally).sort((a,b)=> b[1]-a[1]);
-      const topScore = entries[0][1];
-      const winners = entries.filter(e => e[1]===topScore).map(e=>e[0]);
-      // Tie‑break by the order grapes are defined
-      const order = Object.keys(GRAPES);
-      const winner = winners.sort((a,b)=> order.indexOf(a)-order.indexOf(b))[0];
-      return {winner, tally};
-    }
-
-    // --- Show result ---
-    const resultCard = document.getElementById('resultCard');
-    const resTitle = document.getElementById('resTitle');
-    const resBlurb = document.getElementById('resBlurb');
-    const resStyle = document.getElementById('resStyle');
-    const resStruct = document.getElementById('resStruct');
-    const resAromas = document.getElementById('resAromas');
-    const resRegions = document.getElementById('resRegions');
-    const resLearn = document.getElementById('resLearn');
-    const resServe = document.getElementById('resServe');
-    const resPair = document.getElementById('resPair');
-
-    function bulletList(listEl, items){
-      listEl.innerHTML = '';
-      items.forEach(t => { const li = document.createElement('li'); li.textContent = t; listEl.appendChild(li); });
-    }
-
-    function showResult(key){
-      const g = GRAPES[key];
-      resTitle.textContent = `${g.emoji} You’re ${g.name}!`;
-      resBlurb.textContent = g.blurb;
-      resStyle.textContent = g.style;
-      resStruct.innerHTML = `Acidity: <b>${g.structure.acidity}</b><br>Tannin: <b>${g.structure.tannin}</b><br>Body: <b>${g.structure.body}</b><br>Alcohol: <b>${g.structure.alcohol}</b><br>Sweetness: <b>${g.structure.sweetness}</b>`;
-      bulletList(resAromas, g.aromas);
-      bulletList(resRegions, g.regions);
-      bulletList(resLearn, g.learn || []);
-      resServe.textContent = g.serve;
-      resPair.textContent = g.pairings;
-      resultCard.classList.add('show');
-      resultCard.scrollIntoView({behavior:'smooth', block:'start'});
-    }
-
-    // --- Controls ---
-    const submitBtn = document.getElementById('submitBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const retakeBtn = document.getElementById('retakeBtn');
-
-    function resetQuiz(){
-      form.reset();
-      updateProgress();
-      document.getElementById('toast').textContent = '';
-      resultCard.classList.remove('show');
-    }
-
-    submitBtn.addEventListener('click', ()=>{
-      try{
-        const {winner} = scoreQuiz();
-        showResult(winner);
-      }catch(err){ document.getElementById('toast').textContent = err.message; }
-    });
-    resetBtn.addEventListener('click', resetQuiz);
-    retakeBtn.addEventListener('click', resetQuiz);
-
-    // Initialize progress
-    updateProgress();
-
-    // --- Share helpers ---
-    const shareUrl = window.location.href;
-    const urlInput = document.getElementById('shareUrl');
-    if(urlInput){ urlInput.value = shareUrl; }
-    const qrImg = document.getElementById('qrImg');
-    if(qrImg){ qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(shareUrl); }
-    const copyBtn = document.getElementById('copyBtn');
-    const nativeShare = document.getElementById('nativeShare');
-    const copyToast = document.getElementById('copyToast');
-    copyBtn?.addEventListener('click', async ()=>{
-      try{ await navigator.clipboard.writeText(shareUrl); copyToast.textContent='Link copied!'; setTimeout(()=>copyToast.textContent='',1500);}catch(e){ copyToast.textContent='Copy failed'; }
-    });
-    nativeShare?.addEventListener('click', async ()=>{
-      if(navigator.share){ try{ await navigator.share({title: document.title, url: shareUrl}); }catch(_){} } else { copyToast.textContent='Sharing not supported on this device'; setTimeout(()=>copyToast.textContent='',1500); }
-    });
+  render();
   </script>
 </body>
 </html>
