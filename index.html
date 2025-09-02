@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Which Wine Grape Are You? 🍇</title>
+  <style>
+    :root{
+      --bg:#0f0f12;--card:#17171c;--ink:#f4f4f6;--muted:#a9a9b3;--accent:#8b5cf6;--accent-2:#f59e0b;--ok:#22c55e;--warn:#ef4444;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 20% 0%, #1a1a22, #0c0c0f 60%), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><circle cx="8" cy="8" r="1" fill="%23272733"/></svg>');
+      color:var(--ink);
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:24px}
+    header{
+      display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:space-between;margin-bottom:18px
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),#e879f9);box-shadow:0 10px 30px rgba(139,92,246,.35)}
+    .logo span{font-weight:800}
+    h1{margin:0;font-size:clamp(22px,3.6vw,36px);letter-spacing:.2px}
+    .muted{color:var(--muted)}
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 12px 40px rgba(0,0,0,.45);
+      border-radius:18px; padding:22px; margin:14px 0;
+    }
+    .pill{
+      display:inline-flex; gap:8px; align-items:center; padding:6px 12px; border-radius:999px;
+      background:rgba(139,92,246,.12); color:#d6b9ff; font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:.8px
+    }
+    .grid{display:grid; gap:16px}
+    @media (min-width:800px){.grid{grid-template-columns:1.1fr .9fr}}
+    .q{margin:8px 0 6px; font-weight:700}
+    .options{display:grid; gap:10px; margin:10px 0 6px}
+    .opt{
+      position:relative; display:flex; align-items:center; gap:12px; padding:14px 14px; border-radius:14px; cursor:pointer;
+      background:#141418; border:1px solid rgba(255,255,255,.08);
+    }
+    .opt:hover{border-color:rgba(255,255,255,.18); background:#16161c}
+    .opt input{appearance:none; width:18px;height:18px;border-radius:50%; border:2px solid #aaa; display:grid; place-items:center}
+    .opt input:checked{border-color:var(--accent)}
+    .dot{width:8px;height:8px;border-radius:50%; background:transparent}
+    .opt input:checked + .dot{background:var(--accent)}
+    .actions{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:8px}
+    button{
+      appearance:none; border:0; background:linear-gradient(135deg,var(--accent),#e879f9); color:white; padding:12px 16px; border-radius:14px; cursor:pointer;
+      font-weight:800; letter-spacing:.3px; box-shadow:0 10px 30px rgba(139,92,246,.35);
+    }
+    button.secondary{background:#23232a; color:#e9e9ee; box-shadow:none; border:1px solid rgba(255,255,255,.08)}
+    .toast{font-size:13px}
+    .result{display:none}
+    .result.show{display:block}
+    .result .title{font-size:28px; font-weight:900; margin:0 0 6px}
+    .badge{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.12); background:#15151a}
+    .pair{margin-top:10px; padding:12px; border-radius:14px; background:rgba(34,197,94,.1); border:1px solid rgba(34,197,94,.25)}
+    footer{margin:28px 0 10px; text-align:center; color:var(--muted); font-size:12px}
+    .sr{position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden}
+    .progress{height:6px; background:#1c1c23; border-radius:8px; overflow:hidden; margin:6px 0 14px; border:1px solid rgba(255,255,255,.06)}
+    .bar{height:100%; width:0; background:linear-gradient(90deg, var(--accent), var(--accent-2)); transition:width .4s ease}
+    .note{font-size:12px; color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">🍷</div>
+        <div>
+          <h1>Which Wine Grape Are You?</h1>
+          <div class="muted">8 quick vibes → instant pairing-friendly result</div>
+        </div>
+      </div>
+      <div class="pill">Free • Mobile‑friendly</div>
+    </header>
+
+    <div class="grid">
+      <section class="card">
+        <div class="progress" aria-hidden="true"><div class="bar" id="progressBar"></div></div>
+        <form id="quiz" novalidate>
+          <!-- Questions will be injected here by JS -->
+        </form>
+        <div class="actions">
+          <button id="submitBtn" type="button">Reveal my grape</button>
+          <button id="resetBtn" type="button" class="secondary">Reset</button>
+          <span class="toast muted" id="toast"></span>
+        </div>
+        <p class="note">Your choices stay in your browser. No sign‑ups, no tracking — just vibes.</p>
+      </section>
+
+      <aside class="card result" id="resultCard" aria-live="polite">
+        <div class="badge">🍇 Your result</div>
+        <h2 class="title" id="resTitle">&nbsp;</h2>
+        <p id="resBlurb" class="muted" style="margin-top:-2px"></p>
+        <div id="resFact" class="card" style="padding:12px; background:#121217"> </div>
+        <div id="resPair" class="pair"></div>
+        <div class="actions">
+          <button id="retakeBtn" type="button" class="secondary">Retake</button>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      Built for training sessions — share this page or present on a big screen. Cheers! 🍷
+    </footer>
+  </div>
+
+  <script>
+    // --- Config: Grapes & Result Profiles ---
+    const GRAPES = {
+      chardonnay: {
+        name: "Chardonnay",
+        emoji: "🥂",
+        blurb: "Adaptable, polished, and unflappable — you can go oaked and plush or sleek and mineral depending on the moment.",
+        fact: "From Burgundy to Napa to Margaret River, Chardonnay is a shapeshifter: oak + malolactic = creamy; stainless + cool climate = crisp.",
+        pairing: "Roast chicken, buttery seafood, creamy pastas."
+      },
+      sauvblanc: {
+        name: "Sauvignon Blanc",
+        emoji: "🪁",
+        blurb: "Zesty, zippy, and outdoorsy — you bring fresh energy and a citrus snap to the room.",
+        fact: "Classic homes are Loire (Sancerre, Pouilly‑Fumé) and New Zealand (Marlborough). Expect high acidity and green notes.",
+        pairing: "Goat cheese, salads, herb‑driven seafood."
+      },
+      pinotgrigio: {
+        name: "Pinot Grigio",
+        emoji: "🌤️",
+        blurb: "Easygoing sunshine in a glass — unfussy, refreshing, everyone’s plus‑one.",
+        fact: "Northeast Italy made it famous, but styles range from super‑crisp to slightly textured (Ramato brings a copper hue).",
+        pairing: "Light salads, antipasti, margarita pizza."
+      },
+      riesling: {
+        name: "Riesling",
+        emoji: "🎶",
+        blurb: "Playful and precise — from bone‑dry to lusciously sweet, you hit every note.",
+        fact: "Mosel and Rheingau (Germany) to Clare/Eden (Australia). Aromatic with sky‑high acidity; sweetness levels vary widely.",
+        pairing: "Spicy Asian dishes, pork, fragrant curries."
+      },
+      cabernet: {
+        name: "Cabernet Sauvignon",
+        emoji: "🦁",
+        blurb: "Commanding and structured — you bring backbone, focus, and a hint of drama.",
+        fact: "Bordeaux & Napa icon. Think blackcurrant, cedar, firm tannins; loves oak and time.",
+        pairing: "Steak, lamb, hard cheeses."
+      },
+      merlot: {
+        name: "Merlot",
+        emoji: "🫶",
+        blurb: "Warm, generous, and smooth — softer edges but plenty of depth when needed.",
+        fact: "Often plusher than Cab. Plummy fruit and velvety texture; key in Right Bank Bordeaux.",
+        pairing: "Burgers, meatballs, tomato‑based pasta."
+      },
+      pinotnoir: {
+        name: "Pinot Noir",
+        emoji: "🦊",
+        blurb: "Elegant and sensitive — you notice details others miss and prefer quality over volume.",
+        fact: "Burgundy benchmark; also great in Oregon, New Zealand, Tasmania. Red fruits, silkier tannins, earthy spice.",
+        pairing: "Duck, mushrooms, salmon, roast chicken."
+      },
+      syrah: {
+        name: "Syrah / Shiraz",
+        emoji: "🔥",
+        blurb: "Bold, spicy, and adventurous — you like a little black pepper with your thrill‑seeking.",
+        fact: "Northern Rhône (peppery, savory) vs. Aussie Shiraz (riper, darker). Often inky with generous spice.",
+        pairing: "BBQ, grilled meats, cocoa‑rubbed dishes."
+      }
+    };
+
+    // --- Questions (8) ---
+    // Each option maps to a grape key above
+    const QUESTIONS = [
+      {
+        q: "It’s Friday night — what’s your plan?",
+        options: [
+          {t:"Elegant dinner party", g:"chardonnay"},
+          {t:"Picnic under the stars", g:"sauvblanc"},
+          {t:"Beachy pizza & chill", g:"pinotgrigio"},
+          {t:"Karaoke with friends", g:"riesling"},
+          {t:"Steakhouse reservation", g:"cabernet"},
+          {t:"Cozy comfort‑food night", g:"merlot"},
+          {t:"Art‑house cinema", g:"pinotnoir"},
+          {t:"Late‑night dancing", g:"syrah"},
+        ]
+      },
+      {
+        q: "Pick a dream vacation.",
+        options: [
+          {t:"Paris & Burgundy châteaux", g:"chardonnay"},
+          {t:"New Zealand coastal trails", g:"sauvblanc"},
+          {t:"Amalfi sun & scooters", g:"pinotgrigio"},
+          {t:"Rhine river villages", g:"riesling"},
+          {t:"Napa valley grand tour", g:"cabernet"},
+          {t:"Tuscan farmhouse stay", g:"merlot"},
+          {t:"Kyoto temples in autumn", g:"pinotnoir"},
+          {t:"South African safari", g:"syrah"},
+        ]
+      },
+      {
+        q: "Choose a snack.",
+        options: [
+          {t:"Brie & crackers", g:"chardonnay"},
+          {t:"Goat cheese salad", g:"sauvblanc"},
+          {t:"Crisps & olives", g:"pinotgrigio"},
+          {t:"Fruit gummies", g:"riesling"},
+          {t:"Steak bites", g:"cabernet"},
+          {t:"Dark chocolate", g:"merlot"},
+          {t:"Truffle popcorn", g:"pinotnoir"},
+          {t:"Spicy jerky", g:"syrah"},
+        ]
+      },
+      {
+        q: "Which word fits you best?",
+        options: [
+          {t:"Versatile", g:"chardonnay"},
+          {t:"Energetic", g:"sauvblanc"},
+          {t:"Easygoing", g:"pinotgrigio"},
+          {t:"Quirky", g:"riesling"},
+          {t:"Ambitious", g:"cabernet"},
+          {t:"Warm", g:"merlot"},
+          {t:"Thoughtful", g:"pinotnoir"},
+          {t:"Bold", g:"syrah"},
+        ]
+      },
+      {
+        q: "Pick a color vibe.",
+        options: [
+          {t:"Gold", g:"chardonnay"},
+          {t:"Green", g:"sauvblanc"},
+          {t:"Yellow", g:"pinotgrigio"},
+          {t:"Sky blue", g:"riesling"},
+          {t:"Deep red", g:"cabernet"},
+          {t:"Plum", g:"merlot"},
+          {t:"Ruby", g:"pinotnoir"},
+          {t:"Purple", g:"syrah"},
+        ]
+      },
+      {
+        q: "Friends call you…",
+        options: [
+          {t:"The stylish one", g:"chardonnay"},
+          {t:"The zesty one", g:"sauvblanc"},
+          {t:"The chill one", g:"pinotgrigio"},
+          {t:"The fun one", g:"riesling"},
+          {t:"The leader", g:"cabernet"},
+          {t:"The dependable one", g:"merlot"},
+          {t:"The thoughtful one", g:"pinotnoir"},
+          {t:"The daring one", g:"syrah"},
+        ]
+      },
+      {
+        q: "Dream job?",
+        options: [
+          {t:"Fashion designer", g:"chardonnay"},
+          {t:"Environmental scientist", g:"sauvblanc"},
+          {t:"Travel blogger", g:"pinotgrigio"},
+          {t:"Musician", g:"riesling"},
+          {t:"CEO", g:"cabernet"},
+          {t:"Teacher", g:"merlot"},
+          {t:"Writer", g:"pinotnoir"},
+          {t:"Explorer", g:"syrah"},
+        ]
+      },
+      {
+        q: "When wine’s not available, you order…",
+        options: [
+          {t:"Martini", g:"chardonnay"},
+          {t:"Gin & tonic", g:"sauvblanc"},
+          {t:"Aperol spritz", g:"pinotgrigio"},
+          {t:"Craft cider", g:"riesling"},
+          {t:"Old fashioned", g:"cabernet"},
+          {t:"Hot chocolate", g:"merlot"},
+          {t:"Negroni", g:"pinotnoir"},
+          {t:"Spicy margarita", g:"syrah"},
+        ]
+      }
+    ];
+
+    // --- Render quiz ---
+    const form = document.getElementById('quiz');
+    const progressBar = document.getElementById('progressBar');
+    const toast = document.getElementById('toast');
+
+    function render(){
+      form.innerHTML = '';
+      QUESTIONS.forEach((q, i) => {
+        const block = document.createElement('div');
+        block.className = 'qblock';
+        const qEl = document.createElement('div');
+        qEl.className = 'q';
+        qEl.textContent = (i+1) + '. ' + q.q;
+        block.appendChild(qEl);
+        const opts = document.createElement('div');
+        opts.className = 'options';
+        q.options.forEach((opt, j) => {
+          const id = `q${i}_opt${j}`;
+          const label = document.createElement('label');
+          label.className = 'opt';
+          label.setAttribute('for', id);
+          label.innerHTML = `
+            <input type="radio" name="q${i}" id="${id}" value="${opt.g}">
+            <span class="dot" aria-hidden="true"></span>
+            <span>${opt.t}</span>
+          `;
+          opts.appendChild(label);
+        });
+        block.appendChild(opts);
+        form.appendChild(block);
+      });
+    }
+    render();
+
+    function updateProgress(){
+      const total = QUESTIONS.length;
+      const answered = [...form.querySelectorAll('input[type="radio"]:checked')]
+        .reduce((acc, r) => acc.add(r.name), new Set()).size;
+      const pct = Math.round((answered/total)*100);
+      progressBar.style.width = pct + '%';
+    }
+    form.addEventListener('change', updateProgress);
+
+    // --- Scoring ---
+    function scoreQuiz(){
+      const chosen = [...form.querySelectorAll('input[type="radio"]:checked')].map(r => r.value);
+      if(chosen.length !== QUESTIONS.length){
+        throw new Error(`Please answer all ${QUESTIONS.length} questions.`);
+      }
+      const tally = {};
+      chosen.forEach(g => tally[g] = (tally[g]||0) + 1);
+      const entries = Object.entries(tally).sort((a,b)=> b[1]-a[1]);
+      const topScore = entries[0][1];
+      const winners = entries.filter(e => e[1]===topScore).map(e=>e[0]);
+      // If tie, choose deterministically by first appearance order in GRAPES
+      const order = Object.keys(GRAPES);
+      const winner = winners.sort((a,b)=> order.indexOf(a)-order.indexOf(b))[0];
+      return {winner, tally};
+    }
+
+    // --- Show result ---
+    const resultCard = document.getElementById('resultCard');
+    const resTitle = document.getElementById('resTitle');
+    const resBlurb = document.getElementById('resBlurb');
+    const resFact = document.getElementById('resFact');
+    const resPair = document.getElementById('resPair');
+
+    function showResult(key, tally){
+      const g = GRAPES[key];
+      resTitle.textContent = `${g.emoji} You’re ${g.name}!`;
+      resBlurb.textContent = g.blurb;
+      resFact.textContent = 'Fact: ' + g.fact;
+      resPair.textContent = 'Food pairing: ' + g.pairing;
+      resultCard.classList.add('show');
+      resultCard.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    // --- Controls ---
+    const submitBtn = document.getElementById('submitBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const retakeBtn = document.getElementById('retakeBtn');
+
+    function resetQuiz(){
+      form.reset();
+      updateProgress();
+      toast.textContent='';
+      resultCard.classList.remove('show');
+    }
+
+    submitBtn.addEventListener('click', ()=>{
+      try{
+        const {winner, tally} = scoreQuiz();
+        showResult(winner, tally);
+        toast.textContent = '';
+      }catch(err){
+        toast.textContent = err.message;
+      }
+    });
+    resetBtn.addEventListener('click', resetQuiz);
+    retakeBtn.addEventListener('click', resetQuiz);
+
+    // Initialize progress
+    updateProgress();
+  </script>
+</body>
+</html>
